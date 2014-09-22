@@ -18,8 +18,9 @@ task :clean do
 end
 
 task :compile do
-  classpath = (Dir["lib/ext/*.jar"] + ["#{ENV['MY_RUBY_HOME']}/lib/jruby.jar"]).join(':')
-  system %(javac -Xlint:-options -deprecation -source 1.6 -target 1.6 -cp #{classpath} ext/java/*.java ext/java/org/msgpack/jruby/*.java)
+  classpath = (Dir["lib/ext/*.jar"] + ["#{ENV['MY_RUBY_HOME']}/lib/jruby.jar"] + [ENV['CLASSPATH']]).join(':')
+  # system %(javac -Xlint:-options -deprecation -source 1.6 -target 1.6 -cp #{classpath} ext/java/*.java ext/java/org/msgpack/jruby/*.java)
+  system %(javac -Xlint:-options -deprecation  -cp #{classpath} ext/java/*.java ext/java/org/msgpack/jruby/*.java)
   exit($?.exitstatus) unless $?.success?
 end
 
@@ -38,7 +39,7 @@ task :release => :package do
 end
 
 namespace :benchmark do
-  BENCHMARK_RUBIES = ['1.9.2-p0', 'jruby-1.6.5', 'jruby-head']
+  BENCHMARK_RUBIES = ['1.9.2-p0', 'jruby-1.6.5', 'jruby-1.7.15', 'jruby-head']
   BENCHMARK_GEMSET = 'msgpack-jruby-benchmarking'
   BENCHMARK_FILE = 'spec/benchmarks/shootout_bm.rb'
 
